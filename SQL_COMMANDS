@@ -1,0 +1,22 @@
+create table test1 (
+    ID  BIGint primary key ,
+    name varchar(100) not null,
+    hp int default 100,
+    level int not null default 1,
+    strength int default 0,
+    days int default 0,
+    xp int not null default 0,
+    armorID int default 0,
+    swordID int default 0,
+    money int default 0,
+    inv int[][] ,
+    questID int,
+    base varchar(5)[10][10],
+    numb_kills int default 0,
+    wood_chop int default 0,
+    stone_mine int default 0
+                );
+
+
+insert into test1(ID,name,questID,inv)
+values (1093,'sghp',1903938,array[[10,10]]);
