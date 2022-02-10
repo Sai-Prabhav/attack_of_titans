@@ -1,0 +1,78 @@
+{
+    "armor": [
+        {
+            "id": 0,
+            "name": null,
+            "defence": 0,
+            "recipe": null
+        },
+        {
+            "id": 1,
+            "name": "wooden armor",
+            "defence": 10,
+            "recipe": [
+                {
+                    "id": 1, // id of stone
+                    "quantity": 15
+                },
+                {
+                    "id": 0, // id of wood
+                    "quantity": 30
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": " stone armor",
+            "defence": 10,
+            "recipe": [
+                {
+                    "id": 1, // id of hard stone
+                    "quantity": 45
+                },
+                {
+                    "id": 0, // id of hard wood
+                    "quantity": 15
+                }
+            ]
+        }
+    ],
+    "weapon": [
+        {
+            "id": 0,
+            "name": null,
+            "damage": 0,
+            "recipe": null
+        },
+        {
+            "id": 1,
+            "name": "wooden sword",
+            "damage": 10,
+            "recipe": [
+                {
+                    "id": 1, // id of  stone
+                    "quantity": 15
+                },
+                {
+                    "id": 0, // id of harde wood
+                    "quantity": 30
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": " stone sword",
+            "damage": 10,
+            "recipe": [
+                {
+                    "id": 1, // id of hard stone
+                    "quantity": 45
+                },
+                {
+                    "id": 0, // id of wood
+                    "quantity": 15
+                }
+            ]
+        }
+    ]
+}

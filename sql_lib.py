@@ -32,8 +32,7 @@ def set_base(id, base):
 def get_armor(id):
 
     cursor.execute("SELECT armorID FROM test1 WHERE id = %s", (id,))
-    armor = armour(cursor.fetchone())
-    return armor
+    return armour(cursor.fetchone()[-1])
 
 
 def set_armor(id, armor):
@@ -57,9 +56,9 @@ def set_weapon(id, weapon):
     connection.commit()
 
 
-def get_item(id):
+def get_inventory(id):
 
-    cursor.execute("SELECT itemID FROM test1 WHERE id = %s", (id,))
+    cursor.execute("SELECT inv FROM test1 WHERE id = %s", (id))
     item_list = cursor.fetchone()
     item = {}
     for x in item_list:
@@ -68,9 +67,13 @@ def get_item(id):
     return item
 
 
-def set_item(id, item):
+def set_inventory(id, item):
+    lists = []
+    for keys, values in item:
+        lists.append([keys, values])
 
-    cursor.execute("UPDATE test1 SET itemID = %s WHERE id = %s", (item.id, id))
+    cursor.execute(
+        "UPDATE test1 SET itemID = array%s WHERE id = %s", (str(lists), id))
     connection.commit()
 
 
@@ -186,6 +189,19 @@ def set_quest(id, quest):
     connection.commit()
 
 
+def get_quest_progress(id):
+
+    cursor.execute("SELECT quest_progress FROM test1 WHERE id = %s", (id,))
+    return cursor.fetchone()[0]
+
+
+def set_quest_progress(id, quest_progress):
+
+    cursor.execute(
+        "UPDATE test1 SET quest_progress = %s WHERE id = %s", (quest_progress, id))
+    connection.commit()
+
+
 class user:
     def __init__(self, userID):
         if not isUser(userID):
@@ -208,3 +224,28 @@ class user:
         self.numb_wood = get_numb_wood(userID)
         self.numb_stone = get_numb_stone(userID)
         self.quest = get_quest(userID)
+        self.quest_progress = get_quest_progress(userID)
+
+
+class armor:
+    def __init__(self, armorID):
+        self.id = armorID
+        self.name = armor_list[armorID]["name"]
+        self.defence = armors_list[armorID]["defence"]
+        self.recipe = armor_list[armorID]["recipe"]
+
+
+class weapon:
+    def __init__(self, weaponID):
+        self.id = weaponID
+        self.name = weapon_list[weaponID]["name"]
+        self.damage = weapon_list[weaponID]["damage"]
+        self.recipe = weapon_list[weaponID]["recipe"]
+
+
+class quest:
+    def __init__(self, questID):
+        self.id = questID
+        self.name = quest_list[questID]["name"]
+        self.description = quest_list[questID]["description"]
+        self.reward = quest_list[questID]["reward"]

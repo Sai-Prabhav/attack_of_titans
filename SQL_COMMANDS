@@ -14,7 +14,8 @@ create table test1(
     base int[10][10],
     numb_kills int default 0,
     wood_chop int default 0,
-    stone_mine int default 0
+    stone_mine int default 0,
+    quest_progress int ,
 )
 
 
