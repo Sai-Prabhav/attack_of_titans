@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
-client = commands.Bot(command_prefix='!a')
+client = commands.Bot(command_prefix=('!a',"!a "))
 
 
 @client.event
