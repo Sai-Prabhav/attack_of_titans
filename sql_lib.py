@@ -13,7 +13,231 @@ cursor = connection.cursor()
 cursor.execute("SELECT * FROM test1")
 print(cursor.fetchall())
 
+# hard coded data
+armors = {
+    0: {
+        "id": 0,
+        "name": None,
+        "defence": 0,
+        "recipe": None
+    },
+    1: {
+        "id": 1,
+        "name": ["wooden armor"],
+        "defence": 25,
+        "recipe": [
+            {
+                "id": 1,  # id of stone
+                "quantity": 15
+            },
+            {
+                "id": 0,  # id of wood
+                "quantity": 30
+            }
+        ]
+    },
+    2: {
+        "id": 2,
+        "name": " stone armor",
+        "defence": 50,
+        "recipe": [
+            {
+                "id": 3,  # id of hard stone
+                "quantity": 45
+            },
+            {
+                "id": 2,  # id of hard wood
+                "quantity": 15
+            }
+        ]
+    }
+}
+weapons = {
+    0: {
+        "id": 0,
+        "name": None,
+        "damage": 0,
+        "recipe": None
+    },
+    1: {
+        "id": 1,
+        "name": "wooden sword",
+        "damage": 10,
+        "recipe": [
+            {
+                "id": 1,  # id of  stone
+                "quantity": 15
+            },
+            {
+                "id": 2,  # id of hard wood
+                "quantity": 30
+            }
+        ]
+    },
+    2: {
+        "id": 2,
+        "name": " stone sword",
+        "damage": 25,
+        "recipe": [
+            {
+                "id": 3,  # id of hard stone
+                "quantity": 45
+            },
+            {
+                "id": 0,  # id of wood
+                "quantity": 15
+            }
+        ]
+    }
+
+}
+items = {
+    0: {
+        "id": 0,
+        "name": ["wood"],
+    },
+    1: {
+        "id": 1,
+        "name": ["stone"],
+    },
+    2: {
+        "id": 2,
+        "name": ["hard wood"],
+        "recipe": [
+            {
+                "id": 0,
+                "quantity": 2
+
+            }
+        ]
+    },
+    3: {
+        "id": 3,
+
+        "name": ["hard stone"],
+        "recipe": [
+            {
+                "id": 1,
+                "quantity": 2
+            }
+        ]
+
+    },
+    4: {
+        "id": 4,
+        "name": ["fish"],
+    },
+    5: {
+        "id": 5,
+        "name": ["monster flesh"],
+        "sell": 100
+    },
+    6: {
+        "id": 6,
+        "name": ["monster heart"],
+    },
+    7: {
+        "id": 7,
+        "name": ["life potion"],
+        "sell": 50,
+        "buy": 100,
+        "use": lambda user: set_hp(user.id, user.max_hp)
+    }
+
+
+}
+'''
+data = {
+    "armor": [
+        {
+            "id": 0,
+            "name": null,
+            "defence": 0,
+            "recipe": null
+        },
+        {
+            "id": 1,
+            "name": "wooden armor",
+            "defence": 25,
+            "recipe": [
+                {
+                    "id": 1,  # id of stone
+                    "quantity": 15
+                },
+                {
+                    "id": 0,  # id of wood
+                    "quantity": 30
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": " stone armor",
+            "defence": 50,
+            "recipe": [
+                {
+                    "id": 1,  # id of hard stone
+                    "quantity": 45
+                },
+                {
+                    "id": 0,  # id of hard wood
+                    "quantity": 15
+                }
+            ]
+        }
+    ],
+    "weapon": [
+        {
+            "id": 0,
+            "name": null,
+            "damage": 0,
+            "recipe": null
+        },
+        {
+            "id": 1,
+            "name": "wooden sword",
+            "damage": 10,
+            "recipe": [
+                {
+                    "id": 1,  # id of  stone
+                    "quantity": 15
+                },
+                {
+                    "id": 0,  # id of harde wood
+                    "quantity": 30
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": " stone sword",
+            "damage": 25,
+            "recipe": [
+                {
+                    "id": 1,  # id of hard stone
+                    "quantity": 45
+                },
+                {
+                    "id": 0,  # id of wood
+                    "quantity": 15
+                }
+            ]
+        }
+    ]}
+'''
+
 # functions to fetch data from database
+
+
+def isUser(id):
+    cursor.execute("SELECT id FROM test1 WHERE id = %s", (id,))
+    return cursor.fetchone() is not None
+
+
+def get_name(id):
+
+    cursor.execute("SELECT name FROM test1 WHERE id = %s", (id,))
+    return cursor.fetchone()[0]
 
 
 def get_base(id):
@@ -58,10 +282,12 @@ def set_weapon(id, weapon):
 
 def get_inventory(id):
 
-    cursor.execute("SELECT inv FROM test1 WHERE id = %s", (id))
+    cursor.execute("SELECT inv FROM test1 WHERE id = %s", (id,))
     item_list = cursor.fetchone()
     item = {}
-    for x in item_list:
+    print(item_list)
+    for x in item_list[0]:
+        print(x)
         item[x[0]] = x[1]
 
     return item
@@ -207,9 +433,9 @@ class user:
         if not isUser(userID):
             base = numpy.zeros([10, 10], dtype=int)  # 0 reperesent empty space
             base[5, 5] = 1  # 1 represents the bed
-            create_account(userID, discord.get_user(userID).name, [], base)
+            return None
         self.userID = userID
-        self.name = discord.get_user(userID).name
+        self.name = get_name(userID)
         self.inventory = get_inventory(userID)
         self.level = get_level(userID)
         self.xp = get_xp(userID)
@@ -226,26 +452,56 @@ class user:
         self.quest = get_quest(userID)
         self.quest_progress = get_quest_progress(userID)
 
+    def update():
+        self.name = discord.get_user(userID).name
+        self.inventory = get_inventory(userID)
+        self.level = get_level(userID)
+        self.xp = get_xp(userID)
+        self.hp = get_hp(userID)
+        self.base = get_base(userID)
+        self.strength = get_strength(userID)
+        self.armor = get_armor(userID)
+        self.weapon = get_weapon(userID)
+        self.money = get_money(userID)
+        self.numb_kills = get_numb_kills(userID)
+        self.numb_wood = get_numb_wood(userID)
+        self.numb_stone = get_numb_stone(userID)
+        self.quest = get_quest(userID)
+        self.quest_progress = get_quest_progress(userID)
+
 
 class armor:
     def __init__(self, armorID):
         self.id = armorID
-        self.name = armor_list[armorID]["name"]
-        self.defence = armors_list[armorID]["defence"]
-        self.recipe = armor_list[armorID]["recipe"]
+        self.name = armors[armorID]["name"]
+        self.defence = armors[armorID]["defence"]
+        self.recipe = armors[armorID]["recipe"]
 
 
 class weapon:
     def __init__(self, weaponID):
         self.id = weaponID
-        self.name = weapon_list[weaponID]["name"]
-        self.damage = weapon_list[weaponID]["damage"]
-        self.recipe = weapon_list[weaponID]["recipe"]
+        self.name = weapons[weaponID]["name"]
+        self.damage = weapons[weaponID]["damage"]
+        self.recipe = weapons[weaponID]["recipe"]
 
 
 class quest:
     def __init__(self, questID):
         self.id = questID
-        self.name = quest_list[questID]["name"]
-        self.description = quest_list[questID]["description"]
-        self.reward = quest_list[questID]["reward"]
+        self.name = quests[questID]["name"]
+        self.description = quests[questID]["description"]
+        self.reward = quests[questID]["reward"]
+
+
+class item:
+    def __init__(self, itemID):
+        self.id = itemID
+        self.name = items[itemID]["name"]
+        self.sell_price = items[itemID].get("sell")
+        self.buy_price = items[itemID].get("buy")
+        self.recipe = items[itemID].get("recipe")
+        self.use = items[itemID].get("use")
+
+
+sai = user(512354988157103763)

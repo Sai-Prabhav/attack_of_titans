@@ -9,14 +9,14 @@
         {
             "id": 1,
             "name": "wooden armor",
-            "defence": 10,
+            "defence": 25,
             "recipe": [
                 {
-                    "id": 1, // id of stone
+                    "id": 1, 
                     "quantity": 15
                 },
                 {
-                    "id": 0, // id of wood
+                    "id": 0, 
                     "quantity": 30
                 }
             ]
@@ -24,7 +24,7 @@
         {
             "id": 2,
             "name": " stone armor",
-            "defence": 10,
+            "defence": 50,
             "recipe": [
                 {
                     "id": 1, // id of hard stone
@@ -50,11 +50,11 @@
             "damage": 10,
             "recipe": [
                 {
-                    "id": 1, // id of  stone
+                    "id": 1, 
                     "quantity": 15
                 },
                 {
-                    "id": 0, // id of harde wood
+                    "id": 0, 
                     "quantity": 30
                 }
             ]
@@ -62,14 +62,14 @@
         {
             "id": 2,
             "name": " stone sword",
-            "damage": 10,
+            "damage": 25,
             "recipe": [
                 {
-                    "id": 1, // id of hard stone
+                    "id": 1, 
                     "quantity": 45
                 },
                 {
-                    "id": 0, // id of wood
+                    "id": 0, 
                     "quantity": 15
                 }
             ]
