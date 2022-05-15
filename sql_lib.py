@@ -18,13 +18,13 @@ armors = {
     0: {
         "id": 0,
         "name": None,
-        "defence": 0,
+        "defense": 0,
         "recipe": None
     },
     1: {
         "id": 1,
         "name": ["wooden armor"],
-        "defence": 25,
+        "defense": 25,
         "recipe": [
             {
                 "id": 1,  # id of stone
@@ -39,7 +39,7 @@ armors = {
     2: {
         "id": 2,
         "name": " stone armor",
-        "defence": 50,
+        "defense": 50,
         "recipe": [
             {
                 "id": 3,  # id of hard stone
@@ -152,13 +152,13 @@ data = {
         {
             "id": 0,
             "name": null,
-            "defence": 0,
+            "defense": 0,
             "recipe": null
         },
         {
             "id": 1,
             "name": "wooden armor",
-            "defence": 25,
+            "defense": 25,
             "recipe": [
                 {
                     "id": 1,  # id of stone
@@ -173,7 +173,7 @@ data = {
         {
             "id": 2,
             "name": " stone armor",
-            "defence": 50,
+            "defense": 50,
             "recipe": [
                 {
                     "id": 1,  # id of hard stone
@@ -203,7 +203,7 @@ data = {
                     "quantity": 15
                 },
                 {
-                    "id": 0,  # id of harde wood
+                    "id": 0,  # id of hard wood
                     "quantity": 30
                 }
             ]
@@ -474,7 +474,7 @@ class armor:
     def __init__(self, armorID):
         self.id = armorID
         self.name = armors[armorID]["name"]
-        self.defence = armors[armorID]["defence"]
+        self.defense = armors[armorID]["defense"]
         self.recipe = armors[armorID]["recipe"]
 
 
