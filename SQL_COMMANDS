@@ -1,4 +1,4 @@
-create table test1(
+create table test2(
     ID  BIGint primary key,
     name varchar(100) not null,
     hp int default 100,
@@ -6,8 +6,8 @@ create table test1(
     strength int default 0,
     days int default 0,
     xp int not null default 0,
-    armorID int default 0,
-    swordID int default 0,
+    armourID int default 0,
+    weaponID int default 0,
     money int default 0,
     inv int[][],
     questID int,
@@ -15,8 +15,8 @@ create table test1(
     numb_kills int default 0,
     wood_chop int default 0,
     stone_mine int default 0,
-    quest_progress int ,
+    quest_progress int  
 )
 
 
-insert into test1(ID, name, questID, inv, base) values(512354988157103763, 'user1', 1903938, array[[1, 10]], array[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+insert into test2(ID, name, questID, inv, base) values(512354988157103763, 'user1', 1903938, array[[1, 10]], array[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
