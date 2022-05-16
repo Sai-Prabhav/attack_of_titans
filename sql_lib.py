@@ -1,10 +1,15 @@
 import psycopg2
 import discord
+import discord.ext.commands as commands
 import numpy
 import os
+import asyncio
 from dotenv import load_dotenv
+from time import sleep
+
 
 load_dotenv()
+
 
 connection = psycopg2.connect(
     database="d1stpqngp1fuph", user='tawuenamkzawue', password=os.getenv("PASSWD"), host="ec2-52-214-125-106.eu-west-1.compute.amazonaws.com", port='5432'
@@ -391,10 +396,27 @@ def set_quest_progress(id, quest_progress):
 
 
 class user:
-    def __init__(self, userID):
-        if not isUser(userID):
+    def __init__(self, user):
+        if not isUser(user.id):
             base = numpy.zeros([10, 10], dtype=int)  # 0 reperesent empty space
             base[5, 5] = 1  # 1 represents the bed
+            self.userID = user.id
+            self.name = user.name
+            self.inventory = [[]]
+            self.level = 1
+            self.xp = 0
+            self.hp = 90+10*self.level
+            self.max_hp = 90+10*self.level
+            self.base = base
+            self.strength = 0
+            self.armour = 0
+            self.weapon = 0
+            self.money = 0
+            self.numb_kills = 0
+            self.numb_wood = 0
+            self.numb_stone = 0
+            self.quest = 0
+            self.quest_progress = 0
             return None
         self.userID = userID
         self.name = get_name(userID)
@@ -402,7 +424,7 @@ class user:
         self.level = get_level(userID)
         self.xp = get_xp(userID)
         self.hp = get_hp(userID)
-        self.max_hp = 100+10*self.level
+        self.max_hp = 90+10*self.level
         self.base = get_base(userID)
         self.strength = get_strength(userID)
         self.armour = get_armour(userID)
@@ -421,13 +443,13 @@ class user:
         XP: {self.xp}
         HP: {self.hp}/{self.max_hp}
         Strength: {self.strength}
-        Armour: {self.armour.name}
-        Weapon: {self.weapon.name}
+        Armour: {armour(self.armour).name}
+        Weapon: {weapon(self.weapon).name}
         Money: {self.money}
         Number of kills: {self.numb_kills}
         Number of wood: {self.numb_wood}
         Number of stone: {self.numb_stone}
-        Quest: {self.quest.name}
+        Quest: {quest(self.quest).name}
         Quest progress: {self.quest_progress}
         """
 
@@ -449,5 +471,5 @@ class user:
         self.quest_progress = get_quest_progress(userID)
 
 
-sai = user(512354988157103763)
-print(sai)
+# sai = user(512354988157103763)
+# print(sai)
