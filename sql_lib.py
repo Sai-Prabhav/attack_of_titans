@@ -202,6 +202,12 @@ class item:
 print(item(4).name)
 
 
+def join(user):
+
+    cursor.execute(
+        f"insert into test2 (ID, name) values({user.id}, '{user.name}')")
+
+
 def isUser(id):
     cursor.execute("SELECT id FROM test2 WHERE id = %s", (id,))
     return cursor.fetchone() is not None
@@ -469,7 +475,3 @@ class user:
         self.numb_stone = get_numb_stone(userID)
         self.quest = get_quest(userID)
         self.quest_progress = get_quest_progress(userID)
-
-
-# sai = user(512354988157103763)
-# print(sai)
