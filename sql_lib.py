@@ -15,9 +15,6 @@ connection = psycopg2.connect(
     database="d1stpqngp1fuph", user='tawuenamkzawue', password=os.getenv("PASSWD"), host="ec2-52-214-125-106.eu-west-1.compute.amazonaws.com", port='5432'
 )
 cursor = connection.cursor()
-cursor.execute("SELECT * FROM test2")
-print(cursor.fetchall())
-
 # hard coded data
 armours = {
     0: {
@@ -199,13 +196,11 @@ class item:
         self.use = items[itemID].get("use")
 
 
-print(item(4).name)
-
-
 def join(user):
 
     cursor.execute(
         f"insert into test2 (ID, name) values({user.id}, '{user.name}')")
+    connection.commit()
 
 
 def isUser(id):
@@ -260,10 +255,9 @@ def set_weapon(id, weapon):
 
 def get_inventory(id):
 
-    cursor.execute("SELECT inv FROM test2 WHERE id = %s", (id,))
+    cursor.execute(f'SELECT inv FROM test2 WHERE "id" = {id}')
     item_list = cursor.fetchone()
-    item = {}
-    return item
+    return item_list[0]
 
 
 def set_inventory(id, item):
@@ -424,54 +418,53 @@ class user:
             self.quest = 0
             self.quest_progress = 0
             return None
-        self.userID = userID
-        self.name = get_name(userID)
-        self.inventory = get_inventory(userID)
-        self.level = get_level(userID)
-        self.xp = get_xp(userID)
-        self.hp = get_hp(userID)
+        self.userID = user.id
+        self.name = get_name(self.userID)
+        self.inventory = get_inventory(self.userID)
+        self.level = get_level(self.userID)
+        self.xp = get_xp(self.userID)
+        self.hp = get_hp(self.userID)
         self.max_hp = 90+10*self.level
-        self.base = get_base(userID)
-        self.strength = get_strength(userID)
-        self.armour = get_armour(userID)
-        self.weapon = get_weapon(userID)
-        self.money = get_money(userID)
-        self.numb_kills = get_numb_kills(userID)
-        self.numb_wood = get_numb_wood(userID)
-        self.numb_stone = get_numb_stone(userID)
-        self.quest = get_quest(userID)
-        self.quest_progress = get_quest_progress(userID)
+        self.base = get_base(self.userID)
+        self.strength = get_strength(self.userID)
+        self.armour = get_armour(self.userID)
+        self.weapon = get_weapon(self.userID)
+        self.money = get_money(self.userID)
+        self.numb_kills = get_numb_kills(self.userID)
+        self.numb_wood = get_numb_wood(self.userID)
+        self.numb_stone = get_numb_stone(self.userID)
+        self.quest = get_quest(self.userID)
+        self.quest_progress = get_quest_progress(self.userID)
 
     def __str__(self):
-        return f"""
-        Name: {self.name}
-        Level: {self.level}
-        XP: {self.xp}
-        HP: {self.hp}/{self.max_hp}
-        Strength: {self.strength}
-        Armour: {armour(self.armour).name}
-        Weapon: {weapon(self.weapon).name}
-        Money: {self.money}
-        Number of kills: {self.numb_kills}
-        Number of wood: {self.numb_wood}
-        Number of stone: {self.numb_stone}
-        Quest: {quest(self.quest).name}
-        Quest progress: {self.quest_progress}
-        """
+        return f"""Name: {self.name}
+Level: {self.level}
+XP: {self.xp}
+HP: {self.hp}/{self.max_hp}
+Strength: {self.strength}
+Armour: {self.armour.name}
+Weapon: {self.weapon.name}
+Money: {self.money}
+Number of kills: {self.numb_kills}
+Number of wood: {self.numb_wood}
+Number of stone: {self.numb_stone}
+Quest: {self.quest.name}
+Quest progress: {self.quest_progress}
+"""
 
     def update(self):
-        self.name = discord.get_user(userID).name
-        self.inventory = get_inventory(userID)
-        self.level = get_level(userID)
-        self.xp = get_xp(userID)
-        self.hp = get_hp(userID)
-        self.base = get_base(userID)
-        self.strength = get_strength(userID)
-        self.armour = get_armour(userID)
-        self.weapon = get_weapon(userID)
-        self.money = get_money(userID)
-        self.numb_kills = get_numb_kills(userID)
-        self.numb_wood = get_numb_wood(userID)
-        self.numb_stone = get_numb_stone(userID)
-        self.quest = get_quest(userID)
-        self.quest_progress = get_quest_progress(userID)
+
+        self.inventory = get_inventory(self.userID)
+        self.level = get_level(self.userID)
+        self.xp = get_xp(self.userID)
+        self.hp = get_hp(self.userID)
+        self.base = get_base(self.userid)
+        self.strength = get_strength(self.userID)
+        self.armour = get_armour(self.userID)
+        self.weapon = get_weapon(self.userid)
+        self.money = get_money(self.userid)
+        self.numb_kills = get_numb_kills(self.userid)
+        self.numb_wood = get_numb_wood(self.userid)
+        self.numb_stone = get_numb_stone(self.userid)
+        self.quest = get_quest(self.userid)
+        self.quest_progress = get_quest_progress(self.userid)
