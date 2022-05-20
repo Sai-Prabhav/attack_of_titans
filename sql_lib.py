@@ -15,6 +15,8 @@ connection = psycopg2.connect(
     database="d1stpqngp1fuph", user='tawuenamkzawue', password=os.getenv("PASSWD"), host="ec2-52-214-125-106.eu-west-1.compute.amazonaws.com", port='5432'
 )
 cursor = connection.cursor()
+
+
 # hard coded data
 armours = {
     0: {
@@ -147,7 +149,6 @@ items = {
     }
 
 }
-
 quests = {
     0: {
         "id": 0,
@@ -158,8 +159,25 @@ quests = {
     }
 }
 
+# helpful functions
 
-# functions to fetch data from database
+def monster(member):
+    return [0,True]
+
+
+def battle(agent1, agent2):
+    steps = 0
+    while agent1.hp > 0 and agent2.hp > 0:
+        steps += 1
+        agent1.hp -= agent2.weapon.damage
+        agent2.hp -= agent1.weapon.damage
+    if agent1.hp == agent2.hp:
+        return 0
+    elif agent1.hp > agent2.hp:
+        return (steps, agent1)
+    else:
+        return (steps, agent2)
+# required objects
 
 
 class armour:
@@ -195,6 +213,8 @@ class item:
         self.recipe = items[itemID].get("recipe")
         self.use = items[itemID].get("use")
 
+# functions to fetch data from database
+
 
 def join(user):
 
@@ -204,7 +224,7 @@ def join(user):
 
 
 def isUser(id):
-    cursor.execute("SELECT id FROM test2 WHERE id = %s", (id,))
+    cursor.execute(f"SELECT id FROM test2 WHERE id = {id}")
     return cursor.fetchone() is not None
 
 
@@ -262,11 +282,11 @@ def get_inventory(id):
 
 def set_inventory(id, item):
     lists = []
-    for keys, values in item:
+    for keys, values in item.items():
         lists.append([keys, values])
 
     cursor.execute(
-        "UPDATE test2 SET itemID = array%s WHERE id = %s", (str(lists), id))
+        f"UPDATE test2 SET inv= array{lists} WHERE id = {id}")
     connection.commit()
 
 
@@ -394,11 +414,13 @@ def set_quest_progress(id, quest_progress):
         "UPDATE test2 SET quest_progress = %s WHERE id = %s", (quest_progress, id))
     connection.commit()
 
+# object for users
+
 
 class user:
     def __init__(self, user):
         if not isUser(user.id):
-            base = numpy.zeros([10, 10], dtype=int)  # 0 reperesent empty space
+            base = numpy.zeros([10, 10], dtype=int)  # 0 represent empty space
             base[5, 5] = 1  # 1 represents the bed
             self.userID = user.id
             self.name = user.name
