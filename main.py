@@ -92,7 +92,8 @@ async def fish(ctx):
         await ctx.send(f"you caught {num_fish} fish")
     if randint(0, 10) > 7:
         result = sql_lib.monster(ctx.message.author)
-        await ctx.send(f'you encountered a level {result[0]} and {"won" if result[1] else "lost"} the battle ')
+        if len(result)==3:
+            await ctx.send(f'you encountered a level {result[0]} and won the battle you earned {result[1]} xp and {result[2]} money')
 
 
 client.run(TOKEN)

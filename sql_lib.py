@@ -6,7 +6,7 @@ import os
 import asyncio
 from dotenv import load_dotenv
 from time import sleep
-
+from random import randint, choice
 
 load_dotenv()
 
@@ -60,7 +60,7 @@ weapons = {
     0: {
         "id": 0,
         "name": None,
-        "damage": 0,
+        "damage": 5,
         "recipe": None
     },
     1: {
@@ -158,25 +158,8 @@ quests = {
         "reward": None
     }
 }
+monster_names = ["Goblin", "Orc", "Troll", "Giant", "Dragon"]
 
-# helpful functions
-
-def monster(member):
-    return [0,True]
-
-
-def battle(agent1, agent2):
-    steps = 0
-    while agent1.hp > 0 and agent2.hp > 0:
-        steps += 1
-        agent1.hp -= agent2.weapon.damage
-        agent2.hp -= agent1.weapon.damage
-    if agent1.hp == agent2.hp:
-        return 0
-    elif agent1.hp > agent2.hp:
-        return (steps, agent1)
-    else:
-        return (steps, agent2)
 # required objects
 
 
@@ -196,6 +179,11 @@ class weapon:
         self.recipe = weapons[weaponID]["recipe"]
 
 
+class monster_weapon:
+    def __init__(self, damage):
+        self.damage = damage
+
+
 class quest:
     def __init__(self, questID):
         self.id = questID
@@ -212,6 +200,47 @@ class item:
         self.buy_price = items[itemID].get("buy")
         self.recipe = items[itemID].get("recipe")
         self.use = items[itemID].get("use")
+
+
+class monster:
+    def __init__(self, hp, name, weapon):
+        self.hp = hp
+        self.name = name
+        self.weapon = weapon
+        self.level = (hp-90)//10
+
+# helpful functions
+
+
+def monster_battle(member):
+    hp = 90+10*get_level(member.id)
+    monster_hp = randint(round(hp*0.3), round(hp*0.5))
+    name = choice(monster_names)
+    weapon = monster_weapon(round(get_days*2.5))
+    agent = monster(monster_hp, name, weapon)
+    battle_res = battle(user(member), agent)
+    if battle_res[1] == agent:
+        return [agent.level]
+    else:
+        money = battle_res[0]
+        set_money(member.id, money+get_money(member.id))
+        xp = round(agent.hp*0.2)
+        set_xp(member.id, get_xp(member.id)+xp)
+        return [agent.level, xp, money]
+
+
+def battle(agent1, agent2):
+    steps = 0
+    while agent1.hp > 0 and agent2.hp > 0:
+        steps += 1
+        agent1.hp -= agent2.weapon.damage
+        agent2.hp -= agent1.weapon.damage
+    if agent1.hp == agent2.hp:
+        return 0
+    elif agent1.hp > agent2.hp:
+        return (steps, agent1)
+    else:
+        return (steps, agent2)
 
 # functions to fetch data from database
 
@@ -244,6 +273,18 @@ def set_base(id, base):
 
     cursor.execute("UPDATE test2 SET base = %s WHERE id = %s",
                    (base.tolist(), id))
+    connection.commit()
+
+
+def get_days(id):
+
+    cursor.execute("SELECT days FROM test2 WHERE id = %s", (id,))
+    return cursor.fetchone()[0]
+
+
+def set_days(id, days):
+
+    cursor.execute(f"UPDATE test2 SET days = {days} WHERE id = {id}")
     connection.commit()
 
 
@@ -425,6 +466,7 @@ class user:
             self.userID = user.id
             self.name = user.name
             self.inventory = [[]]
+            self.days = 0
             self.level = 1
             self.xp = 0
             self.hp = 90+10*self.level
@@ -444,6 +486,7 @@ class user:
         self.name = get_name(self.userID)
         self.inventory = get_inventory(self.userID)
         self.level = get_level(self.userID)
+        self.days = get_days(self.userID)
         self.xp = get_xp(self.userID)
         self.hp = get_hp(self.userID)
         self.max_hp = 90+10*self.level
@@ -464,6 +507,7 @@ Level: {self.level}
 XP: {self.xp}
 HP: {self.hp}/{self.max_hp}
 Strength: {self.strength}
+days: {self.days}
 Armour: {self.armour.name}
 Weapon: {self.weapon.name}
 Money: {self.money}
@@ -480,6 +524,7 @@ Quest progress: {self.quest_progress}
         self.level = get_level(self.userID)
         self.xp = get_xp(self.userID)
         self.hp = get_hp(self.userID)
+        self.days = get_days(self.userID)
         self.base = get_base(self.userid)
         self.strength = get_strength(self.userID)
         self.armour = get_armour(self.userID)
