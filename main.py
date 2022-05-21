@@ -71,12 +71,12 @@ async def pay(ctx, to: discord.Member, amount: int):
 
 
 @client.command()
-@commands.cooldown(1, 15, commands.BucketType.user)
+# @commands.cooldown(1, 15, commands.BucketType.user)
 async def fish(ctx):
     if not sql_lib.isUser(ctx.message.author.id):
         await ctx.send("you are not registered you can register with `!ajoin`")
         return
-    if randint(0, 10) < 7:
+    if randint(0, 10) > 7:
         print("fished")
         inv = sql_lib.get_inventory(ctx.message.author.id)
         inv_dict = {}
@@ -90,10 +90,15 @@ async def fish(ctx):
             inv_dict[4] = num_fish
         sql_lib.set_inventory(ctx.message.author.id, inv_dict)
         await ctx.send(f"you caught {num_fish} fish")
-    if randint(0, 10) > 7:
-        result = sql_lib.monster(ctx.message.author)
-        if len(result)==3:
-            await ctx.send(f'you encountered a level {result[0]} and won the battle you earned {result[1]} xp and {result[2]} money')
+    if randint(0, 10) < 7:
+
+        print("fight")
+        result = sql_lib.monster_battle(ctx.message.author)
+        print(result)
+        if len(result) == 3:
+            await ctx.send(f'you encountered {result[0].name} of level {result[0].level} and won the battle you earned {result[1]} xp and {result[2]} money')
+        else:
+            await ctx.send(f'you encountered {result[0].name} of level {result[0].level} and lost the battle better luck next time')
 
 
 client.run(TOKEN)

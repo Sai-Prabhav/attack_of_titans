@@ -3,7 +3,7 @@ create table test2(
     name varchar(100) not null,
     hp int default 100,
     level int not null default 1,
-    strength int default 0,
+    strength int default 10,
     days int default 0,
     xp int not null default 0,
     armourID int default 0,

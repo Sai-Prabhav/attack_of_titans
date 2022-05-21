@@ -207,7 +207,8 @@ class monster:
         self.hp = hp
         self.name = name
         self.weapon = weapon
-        self.level = (hp-90)//10
+        self.level = (hp)//10
+        self.armour = armour(0)
 
 # helpful functions
 
@@ -216,28 +217,32 @@ def monster_battle(member):
     hp = 90+10*get_level(member.id)
     monster_hp = randint(round(hp*0.3), round(hp*0.5))
     name = choice(monster_names)
-    weapon = monster_weapon(round(get_days*2.5))
-    agent = monster(monster_hp, name, weapon)
+    mon_weapon = monster_weapon(
+        round(get_days(member.id)*2.5))
+    agent = monster(monster_hp, name, mon_weapon)
     battle_res = battle(user(member), agent)
     if battle_res[1] == agent:
-        return [agent.level]
+        return [agent]
     else:
         money = battle_res[0]
         set_money(member.id, money+get_money(member.id))
-        xp = round(agent.hp*0.2)
+        xp = round(hp*0.2)
         set_xp(member.id, get_xp(member.id)+xp)
-        return [agent.level, xp, money]
+        
+        return [agent, xp, money]
 
 
 def battle(agent1, agent2):
     steps = 0
-    while agent1.hp > 0 and agent2.hp > 0:
+    hp1 = agent1.hp+agent1.armour.defense
+    hp2 = agent2.hp+agent2.armour.defense
+    while hp1 >= 0 and hp2 >= 0:
         steps += 1
-        agent1.hp -= agent2.weapon.damage
-        agent2.hp -= agent1.weapon.damage
-    if agent1.hp == agent2.hp:
+        hp1 -= agent2.weapon.damage
+        hp2 -= agent1.weapon.damage
+    if hp2 == hp1:
         return 0
-    elif agent1.hp > agent2.hp:
+    elif hp1 > hp2:
         return (steps, agent1)
     else:
         return (steps, agent2)
@@ -322,6 +327,7 @@ def get_inventory(id):
 
 
 def set_inventory(id, item):
+
     lists = []
     for keys, values in item.items():
         lists.append([keys, values])
