@@ -228,7 +228,16 @@ def monster_battle(member):
         set_money(member.id, money+get_money(member.id))
         xp = round(hp*0.2)
         set_xp(member.id, get_xp(member.id)+xp)
-        
+        inv=get_inventory(member.id)
+        if inv.get(6):
+            inv[6]+=1
+        else:
+            inv[6]=1
+        if inv.get(5):
+            inv[5]+=round(battle_res[0]/10)
+        else:
+            inv[5]=round(battle_res[0]/10)
+        set_inventory(member.id, inv)
         return [agent, xp, money]
 
 
@@ -322,8 +331,12 @@ def set_weapon(id, weapon):
 def get_inventory(id):
 
     cursor.execute(f'SELECT inv FROM test2 WHERE "id" = {id}')
-    item_list = cursor.fetchone()
-    return item_list[0]
+    inv = cursor.fetchone()[0]
+
+    inv_dict = {}
+    for i in inv:
+        inv_dict[i[0]] = i[1]
+    return inv_dict
 
 
 def set_inventory(id, item):
