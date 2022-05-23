@@ -214,7 +214,8 @@ class monster:
 
 
 def monster_battle(member):
-    player=user(member)
+    set_days(member.id, 1)
+    player = user(member)
     hp = 90+10*player.level
     monster_hp = randint(round(hp*0.3), round(hp*0.5))
     name = choice(monster_names)
@@ -227,18 +228,20 @@ def monster_battle(member):
     else:
         money = battle_res[0]
         set_money(member.id, money+player.money)
-        set_hp(member.id, player.hp-battle_res[0]*mon_weapon.damage+player.armour.defense)
+        damage = player.hp - \
+            (battle_res[0]*mon_weapon.damage)+player.armour.defense
+        set_hp(member.id, damage)
         xp = round(monster_hp*0.2)
         set_xp(member.id, player.xp+xp)
-        inv=get_inventory(member.id)
+        inv = get_inventory(member.id)
         if inv.get(6):
-            inv[6]+=1
+            inv[6] += 1
         else:
-            inv[6]=1
+            inv[6] = 1
         if inv.get(5):
-            inv[5]+=round(battle_res[0]/10)
+            inv[5] += round(battle_res[0]/10)
         else:
-            inv[5]=round(battle_res[0]/10)
+            inv[5] = round(battle_res[0]/10)
         set_inventory(member.id, inv)
         return [agent, xp, money]
 

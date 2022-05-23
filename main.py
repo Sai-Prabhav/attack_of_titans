@@ -145,7 +145,7 @@ async def chop(ctx):
 async def hunt(ctx):
     await monster(ctx)
 
-@client.command()
+@client.command()   
 async def levelup(ctx):
     if not sql_lib.isUser(ctx.message.author.id):
         await ctx.send("you are not registered you can register with `!ajoin`")
