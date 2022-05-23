@@ -145,4 +145,18 @@ async def chop(ctx):
 async def hunt(ctx):
     await monster(ctx)
 
+@client.command()
+async def levelup(ctx):
+    if not sql_lib.isUser(ctx.message.author.id):
+        await ctx.send("you are not registered you can register with `!ajoin`")
+        return
+    level=sql_lib.get_level(ctx.message.author.id)
+    xp=sql_lib.get_xp(ctx.message.author.id)
+    if xp>=(required_xp:=1.5**level*100):
+        sql_lib.set_xp(ctx.message.author.id,xp-required_xp)
+        sql_lib.set_level(ctx.message.author.id,level+1)
+        await ctx.send(f"you have leveled up to level {level+1}")
+    else:
+        await ctx.send(f"you need {required_xp-xp} more xp to level up")
+
 client.run(TOKEN)
