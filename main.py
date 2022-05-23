@@ -11,11 +11,11 @@ client = commands.Bot(command_prefix=('!a', "!a "))
 
 async def monster(ctx):
 
-        result = sql_lib.monster_battle(ctx.message.author)
-        if len(result) == 3:
-            await ctx.send(f'you encountered {result[0].name} of level {result[0].level} and won the battle you earned {result[1]} xp and {result[2]} money')
-        else:
-            await ctx.send(f'you encountered {result[0].name} of level {result[0].level} and lost the battle better luck next time')
+    result = sql_lib.monster_battle(ctx.message.author)
+    if len(result) == 3:
+        await ctx.send(f'you encountered {result[0].name} of level {result[0].level} and won the battle you earned {result[1]} xp and {result[2]} money')
+    else:
+        await ctx.send(f'you encountered {result[0].name} of level {result[0].level} and lost the battle better luck next time')
 
 
 @client.event
@@ -55,7 +55,7 @@ async def join(ctx):
 @client.command()
 async def inv(ctx):
     inventory = sql_lib.get_inventory(ctx.message.author.id)
-    
+
     ans = ""
     for item, qnt in inventory.items():
         ans += (f"{sql_lib.item(item).name[-1]} : {str(qnt)}\n")
@@ -79,6 +79,7 @@ async def pay(ctx, to: discord.Member, amount: int):
     sql_lib.set_money(to.id, sql_lib.get_money(to.id)+amount)
     await ctx.send(f"you have paid <@{to.id}> {amount}")
 
+
 @client.command()
 @commands.cooldown(1, 15, commands.BucketType.user)
 async def fish(ctx):
@@ -87,7 +88,7 @@ async def fish(ctx):
         return
     if randint(0, 10) < 7:
         inv_dict = sql_lib.get_inventory(ctx.message.author.id)
-        
+
         num_fish = round(randint(1*(sql_lib.get_strength(ctx.message.author.id)/10),
                                  4*(sql_lib.get_strength(ctx.message.author.id)/10)))
         if inv_dict.get(4):
@@ -99,6 +100,7 @@ async def fish(ctx):
     if randint(0, 10) > 7:
         await monster(ctx)
 
+
 @client.command()
 @commands.cooldown(1, 15, commands.BucketType.user)
 async def mine(ctx):
@@ -108,7 +110,7 @@ async def mine(ctx):
     if randint(0, 10) < 7:
         inv_dict = sql_lib.get_inventory(ctx.message.author.id)
         num_stone = round(randint(2*(sql_lib.get_strength(ctx.message.author.id)/10),
-                                5*(sql_lib.get_strength(ctx.message.author.id)/10)))
+                                  5*(sql_lib.get_strength(ctx.message.author.id)/10)))
         if inv_dict.get(2):
             inv_dict[2] += num_stone
         else:
@@ -117,7 +119,8 @@ async def mine(ctx):
         await ctx.send(f"you mined {num_stone} ore")
     if randint(0, 10) > 7:
         await monster(ctx)
-    
+
+
 @client.command()
 @commands.cooldown(1, 15, commands.BucketType.user)
 async def chop(ctx):
@@ -127,7 +130,7 @@ async def chop(ctx):
     if randint(0, 10) < 7:
         inv_dict = sql_lib.get_inventory(ctx.message.author.id)
         num_wood = round(randint(2.5*(sql_lib.get_strength(ctx.message.author.id)/10),
-                                7.5*(sql_lib.get_strength(ctx.message.author.id)/10)))
+                                 7.5*(sql_lib.get_strength(ctx.message.author.id)/10)))
         if inv_dict.get(0):
             inv_dict[0] += num_wood
         else:
@@ -136,5 +139,10 @@ async def chop(ctx):
         await ctx.send(f"you chopped {num_wood} wood")
     if randint(0, 10) > 7:
         await monster(ctx)
+
+@client.command()
+@commands.cooldown(1, 15, commands.BucketType.user)
+async def hunt(ctx):
+    await monster(ctx)
 
 client.run(TOKEN)
