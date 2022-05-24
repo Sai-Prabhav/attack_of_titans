@@ -1,9 +1,7 @@
 import psycopg2
-import discord
 import discord.ext.commands as commands
 import numpy
 import os
-import asyncio
 from dotenv import load_dotenv
 from time import sleep
 from random import randint, choice
@@ -335,13 +333,14 @@ def set_weapon(id, weapon):
 
 def get_inventory(id):
 
+
     cursor.execute(f'SELECT inv FROM test2 WHERE "id" = {id}')
     inv = cursor.fetchone()[0]
 
-    inv_dict = {}
+    inv_dicts = {}
     for i in inv:
-        inv_dict[i[0]] = i[1]
-    return inv_dict
+        inv_dicts[i[0]] = i[1]
+    return inv_dicts
 
 
 def set_inventory(id, item):

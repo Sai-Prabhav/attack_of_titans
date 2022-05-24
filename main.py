@@ -6,7 +6,7 @@ import sql_lib
 from random import randint
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
-client = commands.Bot(command_prefix=('!a', "!a "))
+client = commands.Bot(command_prefix=('!a', "!a ", "!"))
 
 
 async def monster(ctx):
@@ -88,9 +88,8 @@ async def fish(ctx):
         return
     if randint(0, 10) < 7:
         inv_dict = sql_lib.get_inventory(ctx.message.author.id)
-
-        num_fish = round(randint(1*(sql_lib.get_strength(ctx.message.author.id)/10),
-                                 4*(sql_lib.get_strength(ctx.message.author.id)/10)))
+        strength = sql_lib.get_strength(ctx.message.author.id)
+        num_fish = round(randint(strength, 4*strength)/10)
         if inv_dict.get(4):
             inv_dict[4] += num_fish
         else:
@@ -108,15 +107,15 @@ async def mine(ctx):
         await ctx.send("you are not registered you can register with `!ajoin`")
         return
     if randint(0, 10) < 7:
+        strength = sql_lib.get_strength(ctx.message.author.id)
         inv_dict = sql_lib.get_inventory(ctx.message.author.id)
-        num_stone = round(randint(2*(sql_lib.get_strength(ctx.message.author.id)/10),
-                                  5*(sql_lib.get_strength(ctx.message.author.id)/10)))
+        num_stone = round(randint(2*strength, 5*strength)/10)
         if inv_dict.get(2):
             inv_dict[2] += num_stone
         else:
             inv_dict[2] = num_stone
         sql_lib.set_inventory(ctx.message.author.id, inv_dict)
-        await ctx.send(f"you mined {num_stone} ore")
+        await ctx.send(f"you mined {num_stone} stone")
     if randint(0, 10) > 7:
         await monster(ctx)
 
@@ -129,32 +128,34 @@ async def chop(ctx):
         return
     if randint(0, 10) < 7:
         inv_dict = sql_lib.get_inventory(ctx.message.author.id)
-        num_wood = round(randint(2.5*(sql_lib.get_strength(ctx.message.author.id)/10),
-                                 7.5*(sql_lib.get_strength(ctx.message.author.id)/10)))
+        strength = sql_lib.get_strength(ctx.message.author.id)
+        num_wood = round(randint(25*strength, 75*strength)/100)
         if inv_dict.get(0):
             inv_dict[0] += num_wood
         else:
             inv_dict[0] = num_wood
         sql_lib.set_inventory(ctx.message.author.id, inv_dict)
         await ctx.send(f"you chopped {num_wood} wood")
-    if randint(0, 10) > 7:
+    else:
         await monster(ctx)
 
-@client.command()
-@commands.cooldown(1, 15, commands.BucketType.user)
+
+@ client.command()
+@ commands.cooldown(1, 15, commands.BucketType.user)
 async def hunt(ctx):
     await monster(ctx)
 
-@client.command()   
+
+@ client.command()
 async def levelup(ctx):
     if not sql_lib.isUser(ctx.message.author.id):
         await ctx.send("you are not registered you can register with `!ajoin`")
         return
-    level=sql_lib.get_level(ctx.message.author.id)
-    xp=sql_lib.get_xp(ctx.message.author.id)
-    if xp>=(required_xp:=1.5**level*100):
-        sql_lib.set_xp(ctx.message.author.id,xp-required_xp)
-        sql_lib.set_level(ctx.message.author.id,level+1)
+    level = sql_lib.get_level(ctx.message.author.id)
+    xp = sql_lib.get_xp(ctx.message.author.id)
+    if xp >= (required_xp := 1.5**level*100):
+        sql_lib.set_xp(ctx.message.author.id, xp-required_xp)
+        sql_lib.set_level(ctx.message.author.id, level+1)
         await ctx.send(f"you have leveled up to level {level+1}")
     else:
         await ctx.send(f"you need {required_xp-xp} more xp to level up")
